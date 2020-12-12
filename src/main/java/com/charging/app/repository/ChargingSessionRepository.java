@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class ChargingSessionRepository {
 
     /**
-     * Concurrent HashMap to store the sessions
+     * Sorted Map with synchonizes TreeMap implementation to store the sessions
      */
     private static final Map<UUID, ChargingSession> repo = Utils.globalMAP;
 

@@ -11,24 +11,18 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class ChargingSessionRepositoryTest {
 
-    private ConcurrentHashMap<UUID, ChargingSession> mapStore = (ConcurrentHashMap<UUID, ChargingSession>) Utils.globalMAP;
-
     @InjectMocks
     ChargingSessionRepository repository;
-
     @InjectMocks
     SessionSummary summary;
-
+    private SortedMap<UUID, ChargingSession> mapStore = Utils.globalMAP;
     private ChargingSession session;
 
     @BeforeEach

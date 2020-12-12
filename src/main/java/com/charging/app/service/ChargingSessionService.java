@@ -5,6 +5,7 @@ import com.charging.app.common.Utils;
 import com.charging.app.entity.ChargingSession;
 import com.charging.app.entity.SessionSummary;
 import com.charging.app.exception.ChargingSessionNotFoundException;
+import com.charging.app.exception.InvalidInputRequestParamException;
 import com.charging.app.repository.ChargingSessionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,8 +37,8 @@ public class ChargingSessionService {
      */
     public ChargingSession createChargingSession(ChargingSession stationId) {
         log.info("createChargingSession");
-        if(stationId == null){
-            throw new ChargingSessionNotFoundException(1L);
+        if (stationId == null) {
+            throw new ChargingSessionNotFoundException(null);
         }
         return repository.save(createNewSession(stationId.getStationId()));
 
@@ -72,7 +73,14 @@ public class ChargingSessionService {
      */
     public ChargingSession stopChargingSession(UUID id) {
         log.info(" stop the charging session");
-        return repository.save(stopSession(repository.findById(id)));
+        if (id == null) {
+            throw new InvalidInputRequestParamException(null);
+        }
+        ChargingSession response = repository.findById(id);
+        if(response == null){
+            throw new ChargingSessionNotFoundException(id);
+        }
+        return repository.save(stopSession(response));
     }
 
     /**
@@ -82,7 +90,9 @@ public class ChargingSessionService {
      * @return charging session
      */
     private ChargingSession createNewSession(String id) {
-
+        if (id == null || id.equals("")) {
+            throw new InvalidInputRequestParamException(id);
+        }
         ChargingSession chargingSession = new ChargingSession();
 
         chargingSession.setId(Utils.getUUID());

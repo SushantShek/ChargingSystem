@@ -4,14 +4,13 @@ import com.charging.app.common.StatusEnum;
 import com.charging.app.entity.ChargingSession;
 import com.charging.app.entity.SessionSummary;
 import com.charging.app.exception.ChargingSessionNotFoundException;
+import com.charging.app.exception.InvalidInputRequestParamException;
 import com.charging.app.repository.ChargingSessionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
@@ -21,7 +20,6 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,7 +44,10 @@ class ChargingSessionServiceTest {
     @Test
     void createChargingSession_withValidObject() {
         when(repository.save(any(ChargingSession.class))).thenReturn(chargingSession);
-        ChargingSession response = service.createChargingSession(new ChargingSession());
+        ChargingSession session = new ChargingSession();
+        session.setStationId("1");
+        session.setId(UUID.randomUUID());
+        ChargingSession response = service.createChargingSession(session);
         assertNotNull(response);
         assertEquals("abc-12345", response.getStationId());
         assertNotNull(response.getId());
@@ -96,8 +97,16 @@ class ChargingSessionServiceTest {
         chargingSession.setStatus(StatusEnum.FINISHED);
         when(repository.findById(any())).thenReturn(chargingSession);
         when(repository.save(any())).thenReturn(chargingSession);
-       ChargingSession response = service.stopChargingSession(UUID.randomUUID());
-       assertNotNull(response);
-       assertEquals(StatusEnum.FINISHED, response.getStatus());
+        ChargingSession response = service.stopChargingSession(UUID.randomUUID());
+        assertNotNull(response);
+        assertEquals(StatusEnum.FINISHED, response.getStatus());
+    }
+
+    @Test
+    void stopChargingSession_withNullUUID() {
+        Exception exception = assertThrows(InvalidInputRequestParamException.class, () -> {
+            service.stopChargingSession(null);
+        });
+        assertTrue(exception.getMessage().contains("Request parameter is null"));
     }
 }

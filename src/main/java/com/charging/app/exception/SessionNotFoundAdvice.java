@@ -14,4 +14,12 @@ public class SessionNotFoundAdvice {
     String sessionNotFoundHandler(ChargingSessionNotFoundException ex) {
         return ex.getMessage();
     }
+
+    @ResponseBody
+    @ExceptionHandler(InvalidInputRequestParamException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    String invalidRequestParamHandler(InvalidInputRequestParamException ex) {
+        return ex.getMessage();
+    }
+    
 }

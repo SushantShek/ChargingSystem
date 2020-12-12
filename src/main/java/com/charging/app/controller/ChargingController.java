@@ -12,7 +12,7 @@ import java.util.UUID;
 public class ChargingController {
 
 
-    private ChargingSessionService chargingSessionService;
+    private final ChargingSessionService chargingSessionService;
 
     public ChargingController(ChargingSessionService chargingSessionService) {
         this.chargingSessionService = chargingSessionService;
@@ -41,10 +41,9 @@ public class ChargingController {
     }
 
     /**
-     * Retrieve a summary ofsubmitted charging sessions
-     * including:
+     * Retrieve a summary of submitted charging sessions
+     * includes:
      * totalCount – total number of charging session for last minute
-     * <p>
      * startedCount – total number of started
      * stoppedCount – total number of stopped
      */

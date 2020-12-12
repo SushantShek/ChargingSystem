@@ -1,7 +1,9 @@
 package com.charging.app.exception;
 
-public class ChargingSessionNotFoundException  extends RuntimeException{
-    public ChargingSessionNotFoundException(Long id) {
+import java.util.UUID;
+
+public class ChargingSessionNotFoundException extends RuntimeException {
+    public ChargingSessionNotFoundException(UUID id) {
         super("Could not find session " + id);
     }
 }
